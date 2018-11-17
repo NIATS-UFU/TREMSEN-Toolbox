@@ -43,7 +43,7 @@ library(EMD)
 
 #' Convert an rdh file to excel. The function will convert all files in the folder specified by filename
 #'
-#' @param filename ...: use filename <- file.choose() # Seleção do arquivo
+#' @param filename ...: use filename <- file.choose() # SeleÃ§Ã£o do arquivo
 #'
 #' @return
 #' @export
@@ -350,7 +350,7 @@ setClass(
 # Program -----------------------------------------------------------------
 OpenIntanFile <- function(filename)
 {
-  fid <- file(filename, "rb") #conexão
+  fid <- file(filename, "rb") #conexÃ£o
   
   if(isOpen(fid, rw="") == TRUE)
   {
@@ -743,7 +743,7 @@ OpenIntanFile <- function(filename)
       message('Error: End of file not reached.')
     }
     
-    close(fid) #fecha a conexão
+    close(fid) #fecha a conexÃ£o
     
     if (data_present)
     {
