@@ -31,6 +31,9 @@ if (!require(grid)) install.packages('grid')
 if (!require(outliers)) install.packages('outliers')
 if (!require(EMD)) install.packages('EMD')
 if (!require(openxlsx)) install.packages('openxlsx')
+if (!require(dygraphs)) install.packages('dygraphs')
+if (!require(htmltools)) install.packages('htmltools')
+
 
 library(readxl) #carregar biblioteca de leitura de planilha Excel
 library(mvnormtest) #Teste de normalidade
@@ -58,6 +61,8 @@ library(grid)
 library(outliers)
 library (EMD)
 library(openxlsx)
+library(dygraphs)
+library(htmltools)
 
 
 # LoadTREMSENFile ---------------------------------------------------------
@@ -797,4 +802,56 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
                                       layout.pos.col = matchidx$col))
     }
   }
+}
+
+
+
+#' plotMultiPanelData
+#'
+#' @param df1 -> data frame
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' Filename <- file.choose() # select file
+#' df <- LoadTREMSENFile(Filename) # load tremsenfile
+#' plotMultiPanelData(df) # plot tremsen data
+
+plotMultiPanelData <- function(df1)
+{
+  colnames(df1)[1] <- "time"
+  
+  browsable(
+    tagList(list(
+      tags$div(
+        style = 'width:33%;display:block;float:left;',
+        dygraph(data.frame(time=df1$time, G1x=df1$X.G1.X., G2x=df1$X.G2.X.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(255,0,0)", "rgb(155,0,0)"), colorSaturation=c(0.5, 0.1)),
+        dygraph(data.frame(time=df1$time, G1y=df1$X.G1.Y., G2y=df1$X.G2.Y.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(0,255,0)", "rgb(0,155,0)")),
+        dygraph(data.frame(time=df1$time, G1z=df1$X.G1.Z., G2z=df1$X.G2.Z.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(0,0,255)", "rgb(0,0,155)"))%>%dyRangeSelector()
+      ),
+      tags$div(
+        style = 'width:33%;display:block;float:left;',
+        dygraph(data.frame(time=df1$time, A1x=df1$X.A1.X., A2x=df1$X.A2.X.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(255,0,0)", "rgb(155,0,0)")),
+        dygraph(data.frame(time=df1$time, A1y=df1$X.A1.Y., A2y=df1$X.A2.Y.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors =  c("rgb(0,255,0)", "rgb(0,155,0)")),
+        dygraph(data.frame(time=df1$time, A1z=df1$X.A1.Z., A2z=df1$X.A2.Z.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(0,0,255)", "rgb(0,0,155)"))%>%dyRangeSelector()
+      ),
+      tags$div(
+        style = 'width:33%;display:block;float:left;',
+        dygraph(data.frame(time=df1$time, M1x=df1$X.M1.X., M2x=df1$X.M2.X.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(255,0,0)", "rgb(155,0,0)")),
+        dygraph(data.frame(time=df1$time, M1y=df1$X.M1.Y., M2y=df1$X.M2.Y.), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors =  c("rgb(0,255,0)", "rgb(0,155,0)")),
+        dygraph(data.frame(time=df1$time, M1z=df1$X.M1.Z., M2z=df1$X.M2.Z., df1$X.PULSE), group = "ensync", height = 200, width = "100%") %>%
+          dyLegend(show="always")%>%dyOptions(colors = c("rgb(0,0,255)", "rgb(0,0,155)", "rgb(0,0,0)"))%>%dyRangeSelector()
+        
+      )
+    )
+    ))
 }
