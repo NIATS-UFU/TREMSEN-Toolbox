@@ -33,12 +33,12 @@ LoadTREMSENFile <- function(Filename) {
     allowEscapes = TRUE
   )
   colnames(df) <-
-    colnames(df)[2:ncol(df)] # foi necess�rio remover uma coluna pois o R não interpretou um caracter do arquivo original
+    colnames(df)[2:ncol(df)] # foi necessário remover uma coluna pois o R nÃ£o interpretou um caracter do arquivo original
   df <- df[1:ncol(df) - 1]
   df[[1]] = as.numeric(df[[1]])
   
   
-  # incluindo coluna que combina a resposta bin�ria dos pulsos A e B
+  # incluindo coluna que combina a resposta binária dos pulsos A e B
   
   X.PULSE <- combinePulseAB(df$X.PULSE.A., df$X.PULSE.B.)
   X.PULSE<-movavg(X.PULSE, n=10,type='m')
@@ -374,7 +374,7 @@ featExtractFromTremenDataSet <- function(df,w,s, method="rms") {
   ss <- cbind(ss,data.frame(X.PULSE.B.= PulseB$y))
   
   
-  # incluindo coluna que combina a resposta binária dos pulsos A e B
+  # incluindo coluna que combina a resposta binÃ¡ria dos pulsos A e B
   pp <- combinePulseAB(ss$X.PULSE.A., ss$X.PULSE.B.)
   ss <- cbind(ss,data.frame(X.PULSE = pp))
   
@@ -401,7 +401,7 @@ getStatisticsFromWindowedTremenDataSet <- function(df, f = median){
   
   xx <- X$X.PULSE
   
-  if(xx[1]==1) xx[1] <- 0 #condicao em que o pulso começa em n�???vel alto
+  if(xx[1]==1) xx[1] <- 0 #condicao em que o pulso comeÃ§a em nÃ???vel alto
   
   
   ss <- abs(diff(xx))
@@ -467,7 +467,7 @@ resampleTremsenData <- function(df,fs) {
   ss <- cbind(data.frame(X.Time.= tnew), res)
   ss <- cbind(ss, res1)
   
-  # incluindo coluna que combina a resposta binária dos pulsos A e B
+  # incluindo coluna que combina a resposta binÃ¡ria dos pulsos A e B
   pp <- combinePulseAB(ss$X.PULSE.A., ss$X.PULSE.B.)
   ss <- cbind(ss,data.frame(X.PULSE = pp))
   
