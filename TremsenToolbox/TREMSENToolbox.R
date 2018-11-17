@@ -1,12 +1,63 @@
-# install.packages("roxygen2")
-#library(roxygen2)
-
-
 # TREMSEN toolbox  -------------------------------------------------------------------
 # Version: 1.0
 # Author: Prof. Adriano de Oliveira Andrade - adriano@ufu.br
-# Date: 24 July 2018
+# Date: 11 November 2018
 # Description: toolbox for processing data collected with the device TREMSEN
+
+
+if (!require(readxl)) install.packages('readxl')
+if (!require(mvnormtest)) install.packages('mvnormtest')
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(Hmisc)) install.packages('Hmisc')
+if (!require(leaps)) install.packages('leaps')
+if (!require(beanplot)) install.packages('beanplot')
+if (!require(moments)) install.packages('moments')
+if (!require(fBasics)) install.packages('fBasics')
+if (!require(lawstat)) install.packages('lawstat')
+if (!require(plotly)) install.packages('plotly')
+if (!require(robust)) install.packages('robust')
+if (!require(mclust)) install.packages('mclust')
+if (!require(plyr)) install.packages('plyr')
+if (!require(tsne)) install.packages('tsne')
+if (!require(boot)) install.packages('boot')
+if (!require(reshape2)) install.packages('reshape2')
+if (!require(pracma)) install.packages('pracma')
+if (!require(seewave)) install.packages('seewave')
+if (!require(psd)) install.packages('psd')
+if (!require(rlist)) install.packages('rlist')
+if (!require(ggpubr)) install.packages('ggpubr')
+if (!require(gridExtra)) install.packages('gridExtra')
+if (!require(grid)) install.packages('grid')
+if (!require(outliers)) install.packages('outliers')
+if (!require(EMD)) install.packages('EMD')
+if (!require(openxlsx)) install.packages('openxlsx')
+
+library(readxl) #carregar biblioteca de leitura de planilha Excel
+library(mvnormtest) #Teste de normalidade
+library(ggplot2)
+library(Hmisc)
+library(leaps)
+library(beanplot)
+library(moments)
+library(fBasics)
+library(lawstat)
+library(plotly)
+library(robust)
+library(mclust) #citation("mclust")
+library(plyr)
+library(tsne)
+library(boot)
+library(reshape2)
+library(pracma)
+library(seewave)
+library(psd)
+library(rlist)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(outliers)
+library (EMD)
+library(openxlsx)
 
 
 # LoadTREMSENFile ---------------------------------------------------------
@@ -33,12 +84,12 @@ LoadTREMSENFile <- function(Filename) {
     allowEscapes = TRUE
   )
   colnames(df) <-
-    colnames(df)[2:ncol(df)] # foi necessário remover uma coluna pois o R nÃ£o interpretou um caracter do arquivo original
+    colnames(df)[2:ncol(df)] # foi necess�rio remover uma coluna pois o R não interpretou um caracter do arquivo original
   df <- df[1:ncol(df) - 1]
   df[[1]] = as.numeric(df[[1]])
   
   
-  # incluindo coluna que combina a resposta binária dos pulsos A e B
+  # incluindo coluna que combina a resposta bin�ria dos pulsos A e B
   
   X.PULSE <- combinePulseAB(df$X.PULSE.A., df$X.PULSE.B.)
   X.PULSE<-movavg(X.PULSE, n=10,type='m')
@@ -374,7 +425,7 @@ featExtractFromTremenDataSet <- function(df,w,s, method="rms") {
   ss <- cbind(ss,data.frame(X.PULSE.B.= PulseB$y))
   
   
-  # incluindo coluna que combina a resposta binÃ¡ria dos pulsos A e B
+  # incluindo coluna que combina a resposta binária dos pulsos A e B
   pp <- combinePulseAB(ss$X.PULSE.A., ss$X.PULSE.B.)
   ss <- cbind(ss,data.frame(X.PULSE = pp))
   
@@ -401,7 +452,7 @@ getStatisticsFromWindowedTremenDataSet <- function(df, f = median){
   
   xx <- X$X.PULSE
   
-  if(xx[1]==1) xx[1] <- 0 #condicao em que o pulso comeÃ§a em nÃ???vel alto
+  if(xx[1]==1) xx[1] <- 0 #condicao em que o pulso começa em n�???vel alto
   
   
   ss <- abs(diff(xx))
@@ -467,7 +518,7 @@ resampleTremsenData <- function(df,fs) {
   ss <- cbind(data.frame(X.Time.= tnew), res)
   ss <- cbind(ss, res1)
   
-  # incluindo coluna que combina a resposta binÃ¡ria dos pulsos A e B
+  # incluindo coluna que combina a resposta binária dos pulsos A e B
   pp <- combinePulseAB(ss$X.PULSE.A., ss$X.PULSE.B.)
   ss <- cbind(ss,data.frame(X.PULSE = pp))
   
