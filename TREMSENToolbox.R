@@ -3,8 +3,6 @@
 # Author: Prof. Adriano de Oliveira Andrade - adriano@ufu.br
 # Date: 11 November 2018
 # Description: toolbox for processing data collected with the device TREMSEN
-
-
 if (!require(readxl)) install.packages('readxl')
 if (!require(mvnormtest)) install.packages('mvnormtest')
 if (!require(ggplot2)) install.packages('ggplot2')
