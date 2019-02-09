@@ -1,6 +1,8 @@
 # TREMSEN-Toolbox
 Toolbox for processing data from the device TREMSEN
 
+Latest version available @ https://github.com/NIATS-UFU/TREMSEN-Toolbox.git
+
 Contact: Prof. Adriano Andrade (adriano@ufu.br)
 
 How to cite this toolbox:

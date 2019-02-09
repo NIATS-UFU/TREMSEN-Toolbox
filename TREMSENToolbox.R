@@ -1,6 +1,7 @@
 # TREMSEN toolbox  -------------------------------------------------------------------
 # Version: 1.0
 # Date: Feb 09, 2019
+# Latest version available @ https://github.com/NIATS-UFU/TREMSEN-Toolbox.git
 
 # Author: Prof. Adriano de Oliveira Andrade
 # Contact email: adriano@ufu.br
