@@ -1,8 +1,24 @@
 # TREMSEN toolbox  -------------------------------------------------------------------
 # Version: 1.0
-# Author: Prof. Adriano de Oliveira Andrade - adriano@ufu.br
-# Date: 11 November 2018
+# Date: Feb 09, 2019
+
+# Author: Prof. Adriano de Oliveira Andrade
+# Contact email: adriano@ufu.br
+# CV LATTES: http://lattes.cnpq.br/1229329519982110
+# ORCID ID: http://orcid.org/0000-0002-5689-6606
+# Researcher ID: http://www.researcherid.com/rid/D-9721-2012 
+# GOOGLE ACADEMIC: https://scholar.google.com.br/citations?user=8nHKQHMAAAAJ&hl=pt-BR
+
+
+# Adddress: Centre for Innovation and Technology Assessment in Health, 
+#           Postgraduate Program in Electrical and Biomedical Engineering, 
+#           Faculty of Electrical Engineering, Federal University of Uberlândia, 
+#           Uberlândia, Brazil
+# Webpage:  http://www.niats.feelt.ufu.br/
+
 # Description: toolbox for processing data collected with the device TREMSEN
+
+
 if (!require(readxl)) install.packages('readxl')
 if (!require(mvnormtest)) install.packages('mvnormtest')
 if (!require(ggplot2)) install.packages('ggplot2')
