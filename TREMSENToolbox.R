@@ -40,7 +40,7 @@ requiredPackages = c('readxl','mvnormtest', 'ggplot2','Hmisc',
 'leaps','beanplot', 'moments', 'fBasics','lawstat','plotly',
    'robust','mclust', 'plyr','tsne', 'boot', 'reshape2',
  'pracma', 'seewave', 'psd', 'rlist', 'ggpubr', 'gridExtra', 
-'grid', 'outliers', 'EMD','openxlsx',  'dygraphs','htmltools')
+'grid', 'outliers', 'EMD','openxlsx',  'dygraphs','htmltools', 'tibble')
 
 # Load and install packages if necessary
 installAndLoadPackages(requiredPackages)
