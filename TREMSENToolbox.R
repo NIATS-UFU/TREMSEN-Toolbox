@@ -40,7 +40,8 @@ requiredPackages = c('readxl','mvnormtest', 'ggplot2','Hmisc',
 'leaps','beanplot', 'moments', 'fBasics','lawstat','plotly',
    'robust','mclust', 'plyr','tsne', 'boot', 'reshape2',
  'pracma', 'seewave', 'psd', 'rlist', 'ggpubr', 'gridExtra', 
-'grid', 'outliers', 'EMD','openxlsx',  'dygraphs','htmltools', 'tibble')
+'grid', 'outliers', 'EMD','openxlsx',  'dygraphs','htmltools', 'tibble',
+'scales','stringr')
 
 # Load and install packages if necessary
 installAndLoadPackages(requiredPackages)
@@ -517,6 +518,10 @@ resampleTremsenData <- function(df, fs) {
 # Input: 
 #       pp: power spectrum, as estimated by psdTremsenData
 #       printplot: boolean flag (if true, then it will plot the power spectrumm, otherwise a figure handle is generated)
+#       plotvdirection: boolean flag (if true, plots are design vertically)     
+#       plotvline: plot vertical lines at the points given by the discrete frequency vector (e.g., c(2,5,10,15) in Hz)
+#       sensorlabel: sensor labels according to the device TREMSEN
+#       
 #
 # Output:
 #       figure displaying the power spectrum of each time series in the data set
@@ -524,90 +529,63 @@ resampleTremsenData <- function(df, fs) {
 # Example of use:
 #
 #  pp <- psdTremsenData(df.nonlineardetrended) ## It is a good practice to remove trends prior to use this function
-#  g1<-plotPSTremsenDataSet(pp[[1]],printplot = FALSE)
+#  g1<-plotPSTremsenDataSet(pp,printplot = FALSE)
 #  print(g1)
 
-
-plotPSTremsenDataSet <- function(pp, printplot = TRUE) {
+plotPSTremsenDataSet <- function(pp, printplot = TRUE, 
+                                 plotvline = c(2, 5, 10, 15),
+                                 plotvdirection = TRUE,
+                                 sensorlabel = c("A1X","A2X","A1Y","A2Y","A1Z","A2Z",
+                                                 "G1X","G2X","G1Y","G2Y","G1Z","G2Z",
+                                                 "M1X","M2X","M1Y","M2Y","M1Z","M2Z",
+                                                 "EMG1","EMG2")) {
   
-  # Lookup table for changing the label of the graphs:
-  lookupTable <- c(
-    
-    X.G1.X. = "G1X",
-    X.G1.Y. = "G1Y",
-    X.G1.Z. = "G1Z",
-    X.G2.X. = "G2X",
-    X.G2.Y. = "G2Y",
-    X.G2.Z. = "G2Z",
-    X.G3.X. = "G3X",
-    X.G3.Y. = "G3Y",
-    X.G3.Z. = "G3Z",
-    X.G4.X. = "G4X",
-    X.G4.Y. = "G4Y",
-    X.G4.Z. = "G4Z",
-    
-    X.A1.X. = "A1X",
-    X.A1.Y. = "A1Y",
-    X.A1.Z. = "A1Z",
-    X.A2.X. = "A2X",
-    X.A2.Y. = "A2Y",
-    X.A2.Z. = "A2Z",
-    X.A3.X. = "A3X",
-    X.A3.Y. = "A3Y",
-    X.A3.Z. = "A3Z",
-    X.A4.X. = "A4X",
-    X.A4.Y. = "A4Y",
-    X.A4.Z. = "A4Z",
-    
-    X.M1.X. = "M1X",
-    X.M1.Y. = "M1Y",
-    X.M1.Z. = "M1Z",
-    X.M2.X. = "M2X",
-    X.M2.Y. = "M2Y",
-    X.M2.Z. = "M2Z",
-    X.M3.X. = "M3X",
-    X.M3.Y. = "M3Y",
-    X.M3.Z. = "M3Z",
-    X.M4.X. = "M4X",
-    X.M4.Y. = "M4Y",
-    X.M4.Z. = "M4Z",
-    
-    X.PULSE = "PULSE",
-    X.EMG1. = "EMG1",
-    X.EMG2. = "EMG2"
-    
-  )
-
+  
   #pp should be estimated with psdTremsenData
-  dat <- melt(pp, id = c("freq","spec"))
-  facs <- factor(dat$L1)
+  dat <- melt(pp, id = c("freq","spec"))%>%dplyr::rename(sensor=L2)
   
-  c1 <- c("X.G1.X.","X.G1.Y.","X.G1.Z.","X.G2.X.","X.G2.Y.","X.G2.Z.")
-  c2 <- c("X.A1.X.","X.A1.Y.","X.A1.Z.","X.A2.X.","X.A2.Y.","X.A2.Z.")
-  c3 <- c("X.M1.X.","X.M1.Y.","X.M1.Z.","X.M2.X.","X.M2.Y.","X.M2.Z.")
+  dat$sensor <- ifelse(!str_sub(dat$sensor,1,5) == "X.EMG",
+                       str_c(str_sub(dat$sensor,3,4),
+                             str_sub(dat$sensor,6,6)),
+                       str_c(str_sub(dat$sensor,3,6)))
   
-  g <- ggplot() 
-  g <- g + geom_line(data=dat[which(facs == c1),], alpha = 0.8, aes(x = freq, y = spec , group=L1), size=1)
+  
+  if(plotvdirection == TRUE){
+    
+    data <- dat[which(dat$sensor%in%sensorlabel),]
+    
+    g <- ggplot(data, aes(x=freq,y=spec))+
+      geom_line(alpha = 0.8, size=1)+
+      facet_wrap(~sensor, ncol = 1, scale = "free_y",
+                 strip.position = "right")
+  }else{
+    dat$sensor <- factor(dat$sensor, levels = c("A1X","G1X","M1X","A2X","G2X","M2X",
+                                                "A1Y","G1Y","M1Y","A2Y","G2Y","M2Y",
+                                                "A1Z","G1Z","M1Z","A2Z","G2Z","M2Z",
+                                                "EMG1","EMG2"))
+    
+    data <- dat[which(dat$sensor%in%sensorlabel),]
+    
+    g <- ggplot(data, aes(x=freq,y=spec))+
+      geom_line(alpha = 0.8, size=1)+
+      facet_wrap(~sensor, ncol = 3, scale = "free_y",
+                 strip.position = "right")
+  }
+  
+  g <- g + geom_vline(xintercept = plotvline, colour = "red")
+  
+  g <- g + labs(x= "frequency (Hz)", y = "energy")
 
-  g <- g + geom_line(data=dat[which(facs == c2),], alpha = 0.8, aes(x = freq, y = spec , group=L1), size=1)
- 
-  g <- g + geom_line(data=dat[which(facs == c3),], alpha = 0.8, aes(x = freq, y = spec , group=L1), size=1)
-  
-  
-  g <- g + scale_y_continuous(trans = "log10")
-  
-  g <- g + facet_grid(L1 ~ ., scales = "free_y", labeller = labeller(L1=lookupTable)) 
-  
-  g <- g + geom_vline(xintercept = c(2, 5, 10, 15), colour = "red")
-  
-  g <- g + xlab("frequency (Hz)") + ylab("energy")
+  g <- g + scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                         labels = trans_format("log10", math_format(10^.x)),
+                         guide = guide_axis(check.overlap = TRUE))
   
   g <- g + theme_bw(12)
   
   if(printplot == TRUE) 
     print(g)
   
-  return(list(g))
+  return(g)
   
 }
 
